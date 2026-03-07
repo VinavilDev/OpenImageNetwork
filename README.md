@@ -85,11 +85,3 @@ cd OpenImageNetwork
 cargo build --release -p oin-node
 ./target/release/oin-node
 ```
-
-## Security
-
-Nodes never decrypt anything. They store and serve opaque encrypted blobs. The node codebase imports zero cryptographic decryption functions. All endpoints require authentication when the network key is set. HMAC-SHA256 signed heartbeats with replay protection. Constant-time comparisons on all secrets. Input validation on every HTTP parameter. Path traversal protection. No shell commands. Pure Rust, memory safe with 2 `unsafe` blocks (FFI calls for disk space queries on Unix/Windows, both bounds-checked).
-
-## License
-
-MIT
