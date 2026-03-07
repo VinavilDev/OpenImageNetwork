@@ -1,0 +1,31 @@
+[package]
+name = "oin-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core library for Open Image Network - crypto, chunking, manifests, protocol"
+
+[dependencies]
+aes-gcm.workspace = true
+hkdf.workspace = true
+sha2.workspace = true
+# argon2.workspace = true  # TODO: Add back when toolchain supports it
+# ed25519-dalek.workspace = true  # Phase 1
+rand.workspace = true
+reed-solomon-erasure.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+bincode.workspace = true
+base64.workspace = true
+bs58.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+crc32fast.workspace = true
+getrandom.workspace = true
+fips203 = { version = "0.4.3", features = ["ml-kem-1024", "default-rng"] }
+fips204 = { version = "0.4.6", features = ["ml-dsa-87", "default-rng"] }
+sha3 = "0.10.8"
+fips205 = { version = "0.4.1", features = ["slh_dsa_shake_256s", "default-rng"] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util", "macros"] }

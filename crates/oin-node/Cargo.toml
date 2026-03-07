@@ -1,0 +1,24 @@
+[package]
+name = "oin-node"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "OIN Node - stores and serves encrypted image chunks"
+
+[[bin]]
+name = "oin-node"
+path = "src/main.rs"
+
+[dependencies]
+oin-core = { path = "../oin-core" }
+tokio.workspace = true
+axum.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+chrono.workspace = true
+getrandom.workspace = true
+ureq.workspace = true
+libc.workspace = true
