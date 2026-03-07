@@ -1,8 +1,30 @@
-# Open Image Network
+<div align="center">
 
-End-to-end encrypted image hosting with post-quantum cryptography.
+<img src="https://img.shields.io/badge/rust-100%25-B7410E?style=for-the-badge&logo=rust&logoColor=white" alt="rust" />
+<img src="https://img.shields.io/badge/post--quantum-FIPS%20203%20·%20204%20·%20205-7b3fe4?style=for-the-badge" alt="pqc" />
+<img src="https://img.shields.io/badge/encryption-AES--256--GCM-2dd4a0?style=for-the-badge" alt="encryption" />
+<img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="license" />
 
-Upload an image, get a link, share it. No accounts, no tracking, no ads. The gateway never sees your image.
+<br/><br/>
+
+# 🔐 Open Image Network
+
+**Hybrid-decentralized image hosting with end-to-end and post-quantum encryption.**
+
+Upload → get a link → share it. No accounts. No tracking. No ads.
+
+<br/>
+
+<img src="https://img.shields.io/badge/E2E_encrypted-✓-2dd4a0?style=flat-square" alt="e2e" />
+<img src="https://img.shields.io/badge/zero_knowledge_nodes-✓-2dd4a0?style=flat-square" alt="zk" />
+<img src="https://img.shields.io/badge/browser_decryption-✓-2dd4a0?style=flat-square" alt="browser" />
+<img src="https://img.shields.io/badge/reed--solomon-✓-2dd4a0?style=flat-square" alt="erasure" />
+<img src="https://img.shields.io/badge/cross_platform-✓-2dd4a0?style=flat-square" alt="cross" />
+<img src="https://img.shields.io/badge/NAT_friendly-✓-2dd4a0?style=flat-square" alt="nat" />
+
+</div>
+
+---
 
 ## How it works
 
@@ -28,60 +50,108 @@ Upload an image, get a link, share it. No accounts, no tracking, no ads. The gat
 
 The decryption key lives in the URL fragment (`#key`). Browsers never send fragments to servers. The gateway handles encrypted ciphertext only. Nodes store opaque blobs.
 
-## Encryption layers
+---
 
-**Layer 1 — Browser (E2E):** AES-256-GCM with HKDF-SHA256 key derivation. The gateway receives only ciphertext. An HMAC-SHA256 of the ciphertext is embedded in every share link so the viewer can detect tampering before decryption.
+## 🔑 Encryption layers
 
-**Layer 2 — Gateway (PQC):** Each manifest is encrypted with AES-256-GCM using keys exchanged via ML-KEM-1024 (FIPS 203). Every envelope is dual-signed with ML-DSA-87 (FIPS 204) and SLH-DSA-SHAKE-256s (FIPS 205). Chunks are encrypted per-image with AES-256-GCM. Data is split with Reed-Solomon erasure coding so images can survive partial node loss.
+| Layer | Where | What |
+|-------|-------|------|
+| **E2E** | Browser | AES-256-GCM + HKDF-SHA256. Key never leaves your browser. HMAC-SHA256 integrity check in every link. |
+| **PQC** | Gateway | ML-KEM-1024 key exchange → AES-256-GCM manifest encryption. Dual-signed with ML-DSA-87 + SLH-DSA-SHAKE-256s. |
+| **Transport** | Everywhere | HTTPS between all parties. |
 
-**Layer 3 — Transport:** HTTPS between all parties.
+---
 
-## Post-quantum cryptography
+## 🛡️ Post-quantum cryptography
 
-Three NIST FIPS standards at Security Level 5:
+<div align="center">
 
-| Algorithm | Standard | Role |
-|-----------|----------|------|
-| ML-KEM-1024 | FIPS 203 | Key encapsulation |
-| ML-DSA-87 | FIPS 204 | Lattice signatures |
-| SLH-DSA-SHAKE-256s | FIPS 205 | Hash-based signatures |
+| Algorithm | Standard | Role | Status |
+|-----------|----------|------|--------|
+| **ML-KEM-1024** | FIPS 203 | Key encapsulation | 🟢 Active |
+| **ML-DSA-87** | FIPS 204 | Lattice signatures | 🟢 Active |
+| **SLH-DSA-SHAKE-256s** | FIPS 205 | Hash-based signatures | 🟢 Active |
 
-Classical AES-256 randomness is combined with ML-KEM-1024 via HKDF-SHA3-256. Both must be broken simultaneously. Dual signatures mean if lattice math breaks, the hash layer holds.
+</div>
 
-## Architecture
+All three at **Security Level 5** (highest tier). Classical AES-256 randomness combined with ML-KEM-1024 via HKDF-SHA3-256 — both must be broken simultaneously. Dual signatures mean if lattice math breaks, the hash layer holds.
 
-The gateway is a central coordinator — it receives uploads, chunks and encrypts data, distributes to nodes, and reassembles on download. It does not store data permanently. Nodes are the persistent storage layer; they hold only opaque encrypted blobs and cannot decrypt anything.
+---
 
-This is **not fully decentralized**: the gateway is a single point of coordination. Nodes are independent and distributed, but they rely on the gateway for job assignment. If the gateway goes down, existing share links stop working until it comes back. Node data is preserved and will re-sync when the gateway returns.
+## 🏗️ Architecture
+
+> **This is hybrid-decentralized.** The gateway is a central coordinator — it receives uploads, encrypts, distributes to nodes, and reassembles on download. It does not store data permanently. Nodes are the persistent storage layer holding only opaque encrypted blobs they cannot decrypt. If the gateway goes down, share links stop working until it returns. Node data is preserved.
 
 ```
 crates/
-├── oin-core/     Crypto, chunking, erasure coding, PQC, manifests, storage
+├── oin-core/     Crypto, chunking, erasure coding, PQC, manifests
 └── oin-node/     Storage daemon with multi-disk support and gateway sync
 ```
 
-## Run a node
+---
 
-Download the binary for your platform from [Releases](https://github.com/VinavilDev/OpenImageNetwork/releases), then run it:
+## ⚡ Quick start
 
-**Linux / macOS:**
-```
+### Download a binary
+
+Grab the latest from [**Releases**](https://github.com/VinavilDev/OpenImageNetwork/releases):
+
+| Platform | Binary | 
+|----------|--------|
+| 🪟 Windows x64 | [`oin-node-windows-x64.exe`](https://github.com/VinavilDev/OpenImageNetwork/releases/latest) |
+| 🍎 macOS Apple Silicon | [`oin-node-macos-arm64`](https://github.com/VinavilDev/OpenImageNetwork/releases/latest) |
+| 🍎 macOS Intel | [`oin-node-macos-x64`](https://github.com/VinavilDev/OpenImageNetwork/releases/latest) |
+| 🐧 Linux x64 | [`oin-node-linux-x64`](https://github.com/VinavilDev/OpenImageNetwork/releases/latest) |
+
+Then run it:
+
+```bash
+# Linux / macOS
 chmod +x oin-node-*
 ./oin-node-linux-x64
-```
 
-**Windows:**
-```
+# Windows
 oin-node-windows-x64.exe
 ```
 
-No configuration needed. The node connects to the network automatically and starts storing encrypted chunks. No port forwarding required — pull architecture works behind any NAT/firewall.
+**That's it.** No config, no port forwarding, no accounts. The node connects and starts storing encrypted chunks.
 
-## Build from source
+### Build from source
 
-```
+```bash
 git clone https://github.com/VinavilDev/OpenImageNetwork.git
 cd OpenImageNetwork
 cargo build --release -p oin-node
 ./target/release/oin-node
 ```
+
+---
+
+## 🔒 Security
+
+| Check | Status |
+|-------|--------|
+| Nodes can decrypt images | ❌ Impossible — zero decryption imports |
+| Gateway stores plaintext | ❌ Never — E2E ciphertext only |
+| Keys sent to server | ❌ Never — URL fragment only |
+| Authenticated endpoints | ✅ HMAC-SHA256 when network key set |
+| Replay protection | ✅ 120-second timestamp window |
+| Constant-time secrets | ✅ All token comparisons |
+| Input validation | ✅ Every HTTP parameter |
+| Path traversal | ✅ Sanitized on all file operations |
+| Shell injection | ✅ Zero shell commands |
+| Memory safety | ✅ Pure Rust, 2 `unsafe` blocks (FFI disk queries, bounds-checked) |
+
+---
+
+## 📄 License
+
+MIT — do whatever you want with it.
+
+<div align="center">
+<br/>
+<img src="https://img.shields.io/github/stars/VinavilDev/OpenImageNetwork?style=social" alt="stars" />
+<img src="https://img.shields.io/github/forks/VinavilDev/OpenImageNetwork?style=social" alt="forks" />
+<br/><br/>
+<sub>Built with Rust. Secured with math. Trusted by no one.</sub>
+</div>
