@@ -66,11 +66,11 @@ The decryption key lives in the URL fragment (`#key`). Browsers never send fragm
 
 <div align="center">
 
-| Algorithm | Standard | Role | Status |
-|-----------|----------|------|--------|
-| **ML-KEM-1024** | FIPS 203 | Key encapsulation | 🟢 Active |
-| **ML-DSA-87** | FIPS 204 | Lattice signatures | 🟢 Active |
-| **SLH-DSA-SHAKE-256s** | FIPS 205 | Hash-based signatures | 🟢 Active |
+| Algorithm | Standard | Role |
+|-----------|----------|------|
+| **ML-KEM-1024** | FIPS 203 | Key encapsulation |
+| **ML-DSA-87** | FIPS 204 | Lattice signatures |
+| **SLH-DSA-SHAKE-256s** | FIPS 205 | Hash-based signatures |
 
 </div>
 
@@ -96,7 +96,7 @@ crates/
 
 Grab the latest from [**Releases**](https://github.com/VinavilDev/OpenImageNetwork/releases):
 
-| Platform | Binary | 
+| Platform | Binary |
 |----------|--------|
 | 🪟 Windows x64 | [`oin-node-windows-x64.exe`](https://github.com/VinavilDev/OpenImageNetwork/releases/latest) |
 | 🍎 macOS Apple Silicon | [`oin-node-macos-arm64`](https://github.com/VinavilDev/OpenImageNetwork/releases/latest) |
@@ -126,27 +126,6 @@ cargo build --release -p oin-node
 ```
 
 ---
-
-## 🔒 Security
-
-| Check | Status |
-|-------|--------|
-| Nodes can decrypt images | ❌ Impossible — zero decryption imports |
-| Gateway stores plaintext | ❌ Never — E2E ciphertext only |
-| Keys sent to server | ❌ Never — URL fragment only |
-| Authenticated endpoints | ✅ HMAC-SHA256 when network key set |
-| Replay protection | ✅ 120-second timestamp window |
-| Constant-time secrets | ✅ All token comparisons |
-| Input validation | ✅ Every HTTP parameter |
-| Path traversal | ✅ Sanitized on all file operations |
-| Shell injection | ✅ Zero shell commands |
-| Memory safety | ✅ Pure Rust, 2 `unsafe` blocks (FFI disk queries, bounds-checked) |
-
----
-
-## 📄 License
-
-MIT — do whatever you want with it.
 
 <div align="center">
 <br/>
