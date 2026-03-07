@@ -128,9 +128,5 @@ cargo build --release -p oin-node
 ---
 
 <div align="center">
-<br/>
-<img src="https://img.shields.io/github/stars/VinavilDev/OpenImageNetwork?style=social" alt="stars" />
-<img src="https://img.shields.io/github/forks/VinavilDev/OpenImageNetwork?style=social" alt="forks" />
-<br/><br/>
 <sub>Built with Rust. Secured with <3 and Sweat.</sub>
 </div>
