@@ -144,13 +144,33 @@ impl LocalStore {
     }
 }
 
+#[cfg(target_os = "windows")]
 fn dirs_fallback() -> PathBuf {
-    if let Some(home) = std::env::var_os("USERPROFILE")
-        .or_else(|| std::env::var_os("HOME"))
-    {
-        PathBuf::from(home).join(".oin")
-    } else {
-        PathBuf::from(".oin")
+    return PathBuf::from(
+        std::env::var_os("USERPROFILE")
+        .expect("%USERPROFILE% is not set!")
+    ).join(".oin");
+}
+
+#[cfg(target_os = "macos")]
+fn dirs_fallback() -> PathBuf {
+    return PathBuf::from(
+        std::env::var_os("HOME")
+        .expect("$HOME is not set!")
+    ).join(".oin");
+}
+
+#[cfg(target_os = "linux")]
+fn dirs_fallback() -> PathBuf {
+
+    if let Some(xdg) = std::env::var_os("XDG_DATA_HOME") {
+        return PathBuf::from(xdg).join("oin");
+    }
+    else if let Some(home) = std::env::var_os("HOME") {
+        return PathBuf::from(home).join(".local/share/oin");
+    }
+    else {
+        panic!("both $XDG_DATA_DIR and $HOME are unset!");
     }
 }
 
